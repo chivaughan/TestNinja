@@ -4,18 +4,22 @@ namespace TestNinja.Mocking
 {
     public class EmployeeController
     {
-        private EmployeeContext _db;
+        private IEmployeeStorage _employeeStorage;
 
         public EmployeeController()
         {
-            _db = new EmployeeContext();
+            _employeeStorage = new EmployeeStorage();
+        }
+
+        public EmployeeController(IEmployeeStorage employeeStorage)
+        {
+            _employeeStorage = employeeStorage;
         }
 
         public ActionResult DeleteEmployee(int id)
         {
-            var employee = _db.Employees.Find(id);
-            _db.Employees.Remove(employee);
-            _db.SaveChanges();
+            _employeeStorage.DeleteEmployee(id);
+
             return RedirectToAction("Employees");
         }
 
@@ -28,7 +32,7 @@ namespace TestNinja.Mocking
     public class ActionResult { }
  
     public class RedirectResult : ActionResult { }
-    
+
     public class EmployeeContext
     {
         public DbSet<Employee> Employees { get; set; }
@@ -40,5 +44,6 @@ namespace TestNinja.Mocking
 
     public class Employee
     {
+        
     }
 }
